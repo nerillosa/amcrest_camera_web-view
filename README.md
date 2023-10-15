@@ -11,7 +11,7 @@ The [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) cam
 
 
 You can configure the camera to send files and videos to a local WiFi connection. You need to specify the FTP address and folder and username/password.
-I used a raspberrypi running an ftp service in my local home LAN (192.168.0.3).
+I used the same [raspberrypi](https://www.raspberrypi.com) running the web application as an ftp server in my local home LAN (192.168.0.3).
 
 
 The camera will copy all the files (image and video) of a day in a named folder (2023-04-02) under a parent folder called AMC00077_E4948E.

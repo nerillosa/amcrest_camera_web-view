@@ -19,7 +19,7 @@ The camera will copy all the files (image and video) of a day in a named folder 
 
 You need to mount flashdrives with sufficient capacity to hold all the files. Files for a whole year amount to around 200 Gbytes.
 
-The web application files are located at: /var/www/html.
+The web application files are located at: /var/www/html. The main index.html file is powered by [angularjs technology](https://docs.angularjs.org/guide/introduction).
 
   
 Example file structure:  

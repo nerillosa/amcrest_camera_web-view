@@ -17,7 +17,7 @@ I used the same [raspberrypi](https://www.raspberrypi.com) running the web appli
 The camera will copy all the files (image and video) of a day in a named folder (2023-04-02) under a parent folder called AMC00077_E4948E.
 
 
-You need to mount flashdrives with sufficient capacity to hold all the files. Files for a whole year amount to around 200 Gbytes.
+You need to mount [flashdrives](https://www.amazon.com/gp/product/B083ZLJ5MG/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) with sufficient capacity to hold all the files. Files for a whole year amount to around 200 Gbytes.
 
 The web application files are located at: /var/www/html. The main index.html file is powered by [angularjs](https://docs.angularjs.org/guide/introduction) technology.
 

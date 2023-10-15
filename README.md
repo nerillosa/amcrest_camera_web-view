@@ -1,5 +1,6 @@
 # amcrest_camera_web-view
-Web view of videos and pictures taken by motion detecting amcrest camera.
+Web view of videos and pictures taken by motion detecting amcrest camera.  
+A [raspberrypi](https://www.raspberrypi.com) (mini linux computer) runs as a [web server](https://techworldthink.github.io/Tech-Guides/pages/nginx_pi.html) using nginx where you can scroll through specific days and times and view pics and videos.
 
   
 ![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/d222713e-edef-43d5-84e7-437ba58a26a1)
@@ -16,8 +17,6 @@ The camera will copy all the files (image and video) of a day in a named folder 
 
 
 You need to mount flashdrives with sufficient capacity to hold all the files. Files for a whole year amount to around 200 Gbytes.
-
-The raspberrypi also runs as a web server using nginx where you can scroll through specific days and times and view pics and videos.
 
 The web application files are located at: /var/www/html.
 

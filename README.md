@@ -1,5 +1,5 @@
 # amcrest_camera_web-view
-Web view of videos and pictures taken by motion detecting amcrest camera.  
+Web view of videos and pictures taken by motion detecting [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) camera.  
 A [raspberrypi](https://www.raspberrypi.com) (mini linux computer) runs as a [web server](https://techworldthink.github.io/Tech-Guides/pages/nginx_pi.html) using nginx where you can scroll through specific days and times and view pics and videos.
 
   

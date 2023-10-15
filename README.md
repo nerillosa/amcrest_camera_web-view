@@ -5,7 +5,7 @@ Web view of videos and pictures taken by motion detecting amcrest camera. http:/
 ![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/d222713e-edef-43d5-84e7-437ba58a26a1)
 
 
-The Amcrest ProHD 1080P camera takes pictures and videos automatically on motion.
+The [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) camera takes pictures and videos automatically on motion.
 
 
 You can configure the camera to send files and videos to a local WiFi connection. You need to specify the FTP address and folder and username/password.

@@ -14,6 +14,10 @@ The camera will copy all the files (image and video) of a day in a named folder 
 \
 You need to mount flashdrives with sufficient capacity to hold all the files. Files for a whole year amount to around 200 Gbytes.
 
+The raspberrypi also runs as a web server using nginx where you can scroll through specific days and times and view pics and videos.
+
+The web application files are located at: /var/www/html.
+
   
 Example file structure:  
   

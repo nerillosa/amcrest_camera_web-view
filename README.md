@@ -3,7 +3,8 @@ Web view of videos and pictures taken by motion detecting amcrest camera.
 A [raspberrypi](https://www.raspberrypi.com) (mini linux computer) runs as a [web server](https://techworldthink.github.io/Tech-Guides/pages/nginx_pi.html) using nginx where you can scroll through specific days and times and view pics and videos.
 
   
-![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/d222713e-edef-43d5-84e7-437ba58a26a1)
+![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/769a5804-15cf-4de5-9959-3abb299556ce)
+
 
 
 The [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) camera takes pictures and videos automatically on motion.
@@ -22,5 +23,6 @@ The web application files are located at: /var/www/html.
 
   
 Example file structure:  
+
+![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/7a63f265-ad5f-440c-a2db-cb076a226e2f)
   
-![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/6a08f2ad-7812-46e8-a556-3292819eec29)

@@ -22,7 +22,7 @@ You need to mount [flashdrives](https://www.amazon.com/gp/product/B083ZLJ5MG/ref
 The web application files are located at: /var/www/html. The main index.html file is powered by [angularjs](https://docs.angularjs.org/guide/introduction) technology.
 
   
-Example file structure:  
+Example file upload structure:  
 
 ![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/7a63f265-ad5f-440c-a2db-cb076a226e2f)
   

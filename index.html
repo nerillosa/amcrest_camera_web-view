@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amcrest files</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta name="keywords" content="photos, videos, snapshots, motion detectors" />
+    <link rel="icon" type="image/png" href="images/amcrest.png">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+    <link rel="stylesheet" type="text/css" href="css/amcrest.css">
+</head>
+
+<body>
+    <div ng-app="myApp" ng-controller="myController">
+	<div class="content">
+		<div>Real Time Camera/Videos for Neri's house</div>
+		<div>
+			<span>Choose Date: &nbsp;<input type="text" id="datepicker" value-changed></span>
+			<span>&nbsp;&nbsp;&nbsp;</span>
+			<img tabindex="0" ng-keydown="($event.which === 13)?pullHours():0" class="deltaHours" 
+				ng-src="/images/left_arrow.png" ng-if="selectedHour" ng-click="pullHours()"/>
+			<span>
+				Choose Hour:
+				<select ng-model="selectedHour" ng-options="hour for hour in hours" ng-change="getImages()">
+					<option value="">-Select-</option>
+				</select>
+			</span>
+			<img tabindex="0" ng-keydown="($event.which === 13)?pushHours():0" class="deltaHours" 
+				ng-src="/images/right_arrow.png" ng-if="selectedHour" ng-click="pushHours()"/>
+		</div>
+		<br>
+		<div>
+			<img class="slides" ng-src="/{{filesystem}}/{{day}}/{{selectedHour}}hour/jpg/{{Image}}" ng-click="ImageClick()" alt="&nbsp;no images"/>
+		</div>
+		<div class="scrollDiv">
+			<div>
+				<div ng-if="Images.length">
+					<img tabindex="0" ng-keydown="leftArrow($event)" class="arrows" ng-src="/images/left_arrow.png" ng-click="ImageClickBack()"/>
+					<span class="explain">Click to Scroll</span>
+					<img id="rightArrow" tabindex="0" ng-keydown="rightArrow($event)" class="arrows" ng-src="/images/right_arrow.png" ng-click="ImageClick()"/>
+				</div>
+			</div>
+			<div>
+				<button class="scrollPics" ng-click="scrollPics()">{{startScroll}}</button>
+			</div>
+			<div style="text-align:right;">
+				<span><b><a href="#" ng-click="videosClicked()">VIDEOS</a></b></span>
+				<img class="video" ng-src="/images/video.png" ng-click="videosClicked()" title="View videos for date/time chosen"/>
+			</div>
+		</div>
+		<div ng-if="loading" class="loadingDiv"><img src="images/loading_green.gif" width="100px;"></div>
+	</div>
+	<div class="times">
+		<h3>&nbsp;</h3>
+		<div ng-if="gridImages.length">Click on box for specific time</div>
+		<div ng-repeat="grid in gridImages" class="parentt">
+			<span ng-repeat="img in grid" ng-click="focusImage(img)" class="dina" ng-style="Image==img ? {'background-color':'blue'} : {'background-color':'#ADD8E6'}">
+				{{img.substring(0,8).replace('.',':').replace('.',':')}}
+			</span>    
+		</div>
+	</div>
+	<div class="videosModal" ng-show="videosFlag">
+		<h3>Videos for Day/Hour chosen</h3>
+		<div ng-repeat="vid in Videos">
+			<div style="margin-bottom: 6px;">
+			<a href="#" ng-click="openVideo(vid)">{{vid | limitTo:17}}</a>
+			</div>
+		</div>
+		<br>
+		<button id="okButton" ng-click="videosFlag = false;">OK</button>
+	</div>
+
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+<script>
+    angular.module("myApp", []).controller('myController', printjStats).directive('valueChanged', dateChanged); 
+    
+    function dateChanged($http){
+    	return {
+    		restrict: 'A',
+    		link: function(scope, element, attrs){
+    			element.on("change", function(evt){
+    				scope.day = element.val();
+				if(scope.day.substring(0,4) == '2021'){
+				   scope.filesystem = 'files2021';
+				}else if(scope.day.substring(0,4) == '2022'){
+				   scope.filesystem = 'files2022';
+				}else{
+				   scope.filesystem = 'files_current';
+				}
+    				scope.hours = [];
+    				scope.selectedHour = null;
+    				getHours(scope, $http);});
+    			}
+    	};
+    }
+
+    function getHours(scope, http){
+    	http.get("getTimes.php?day=" + scope.day).then(function (response){
+    		scope.hours = response.data;
+		scope.selectedHour = scope.hours[scope.hours.length - 1];
+		scope.getImages();
+    	});
+    }
+
+    function printjStats($scope, $timeout, $interval, $http, $httpParamSerializer){
+	var index;
+	var numImages;
+	var promise;
+	$scope.startScroll = 'Scroll Pics';
+	$scope.loading = true;
+    	$scope.videosFlag = false;
+	$scope.myWindow;
+	let config = { headers : { 'Content-Type': 'application/x-www-form-urlencoded' }};
+
+	$timeout(function(){
+		$scope.day = document.getElementById('datepicker').value;
+                if($scope.day.substring(0,4) == '2021'){
+                   $scope.filesystem = 'files2021';
+                }else if($scope.day.substring(0,4) == '2022'){
+                   $scope.filesystem = 'files2022';
+                }else{
+                   $scope.filesystem = 'files_current';
+                }		
+		getHours($scope, $http);
+	});
+
+	$scope.scrollPics = function(){
+		if($scope.startScroll == 'Scroll Pics'){
+			$scope.startScroll = 'Stop Scroll';
+			$scope.ImageClick();
+			promise = $interval($scope.ImageClick, 150);
+		}else{
+			$scope.startScroll = 'Scroll Pics';
+			$interval.cancel(promise);
+		}
+	};
+
+	$scope.getImages = function(){
+		let payload = {hour: $scope.selectedHour+"hour", day: $scope.day};
+		$http.post("getImages.php",$httpParamSerializer(payload),config).then(function (response) {
+			$scope.loading = false;
+			$scope.Image = response.data[0].jpegs[0];
+			$scope.Images = response.data[0].jpegs;
+			$scope.Videos = response.data[1].mp4s;
+			index = 0;
+			numImages = response.data[0].jpegs.length;
+			$scope.gridImages = [];
+			var arr = new Array();
+			for(var i=0; i< $scope.Images.length; i++){
+				if(i && i % 3 == 0){
+					$scope.gridImages.push(arr);
+					arr = new Array();	
+				}
+				arr.push($scope.Images[i]);
+			}
+			if(arr.length) $scope.gridImages.push(arr);
+			if($scope.Images.length){
+				$timeout(function(){
+					document.getElementById("rightArrow").focus();
+				},200);
+			}
+		});
+	};
+
+	$scope.pullHours = function(){
+		var indexx = $scope.hours.indexOf($scope.selectedHour);
+		if(indexx == 0){
+			$scope.selectedHour = $scope.hours[$scope.hours.length - 1]; 
+		}else{
+			$scope.selectedHour = $scope.hours[indexx - 1];
+		}
+		$scope.getImages();
+	};
+
+	$scope.pushHours = function(){
+		var indexx = $scope.hours.indexOf($scope.selectedHour);
+		if(indexx == $scope.hours.length - 1){
+			$scope.selectedHour = $scope.hours[0]; 
+		}else{
+			$scope.selectedHour = $scope.hours[indexx + 1];
+		}
+		$scope.getImages();
+	};
+
+	$scope.rightArrow = function($event){
+		if($event.which == 13 || $event.which == 39) {
+			$scope.ImageClick();
+		} else if($event.which == 37){	
+			$scope.ImageClickBack();
+		}
+	}
+
+	$scope.leftArrow = function($event){
+		if($event.which == 13 || $event.which == 37) {
+			$scope.ImageClickBack();
+		} else if($event.which == 39){	
+			$scope.ImageClick();
+		}
+	}
+	
+	$scope.videosClicked = function(){
+		$scope.videosFlag = true;
+		if($scope.startScroll == 'Stop Scroll'){
+			$scope.startScroll = 'Scroll Pics';
+			$interval.cancel(promise);
+		}
+	}
+
+	$scope.ImageClick = function(){
+		if (++index > numImages - 1) {
+			index = 0;
+		}
+		$scope.Image = $scope.Images[index];
+	};
+
+	$scope.ImageClickBack = function(){
+		if (--index < 0) {
+			index = numImages - 1;
+		}
+		$scope.Image = $scope.Images[index];
+	};
+
+	$scope.focusImage = function(img){
+		for(var i=0; i< $scope.Images.length; i++){
+			if(img == $scope.Images[i]){
+				$scope.Image = $scope.Images[i];
+				index = i;
+			}
+		}
+		if($scope.Images.length){
+			$timeout(function(){document.getElementById("rightArrow").focus();},50);
+		}
+	}
+
+	$scope.openVideo = function(vid){
+		if($scope.myWindow){ //close previous if exists
+			$scope.myWindow.close();
+			$scope.myWindow = null;
+		}
+		$scope.myWindow = window.open("", "MsgWindow", "width=850,height=600");
+ 		var link = "/" + $scope.filesystem + "/" + $scope.day + "/" + $scope.selectedHour + "hour/mp4/" + vid;
+		var videoUrl = '<video width="800" height="500" controls="controls"> <source src="';
+		videoUrl +=  link;
+		videoUrl += '" type="video/mp4" /></video>';
+		$scope.myWindow.document.write('<div style="text-align:center;">' + $scope.day + " <b>from</b> " + vid.substring(0,8).replace(/\./g, ":") + ' <b>to</b> ' +  vid.substring(9,17).replace(/\./g, ":") + '</div>');
+		$scope.myWindow.document.write(videoUrl);
+		$scope.myWindow.document.write('<div style="margin-top:5px;text-align:center;"><a href="' + link + '" download>Download Video</a></div>');
+	};
+}    
+</script>
+<script>
+    var picker = new Pikaday({ 	field: document.getElementById('datepicker'),
+			       	defaultDate: new Date(),
+				setDefaultDate: true,
+				toString(date, format) {
+					let day = date.getDate();
+					if(day < 10) day = "0" + day;
+					let month = date.getMonth() + 1;
+					if(month < 10) month = "0" + month;
+					let year = date.getFullYear();
+					return `${year}-${month}-${day}`;
+				}
+		});
+</script>
+</html>
+

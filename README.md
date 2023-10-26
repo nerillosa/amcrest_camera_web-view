@@ -13,8 +13,8 @@ Allows you, among other things, to verify that packages were actually delivered 
 The [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) camera takes pictures and videos automatically on motion.
 
 
-You can configure the camera to send files and videos via FTP to a local WiFi connection. You need to specify the FTP address and folder and username/password.
-I used the same [raspberrypi](https://www.raspberrypi.com) running the web application as an ftp server in my local home LAN (192.168.0.3).
+You can configure the camera to send files and videos via FTP to a local WiFi connection. You will need to specify the FTP address and destination folder and username/password.
+I used the same [raspberrypi](https://www.raspberrypi.com) running the web application as an [ftp server](https://matthewmoisen.com/blog/how-to-configure-an-ftp-server-on-the-raspberry-pi-for-transferring-files-on-a-lan/) in my local home LAN (192.168.0.3).
 
 
 The camera will copy all the files (image and video) of a day in a named folder (Ex. 2023-04-02) under a parent folder called AMC00077_E4948E (this will vary and depend on the serial/model of your camera).

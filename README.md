@@ -1,8 +1,11 @@
 # Amcrest camera web view.
-Web view of videos and pictures taken by motion detecting [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) camera.  
-A [raspberrypi](https://www.raspberrypi.com) (mini linux computer) runs as a [web server](https://techworldthink.github.io/Tech-Guides/pages/nginx_pi.html) using nginx where you can scroll through specific days and times and view pics and videos.
+Web page showing videos and pictures taken by the motion detecting [Amcrest ProHD 1080P](https://www.amazon.com/gp/product/B0145OQTPG?th=1) camera. 
 
+A [raspberrypi](https://www.raspberrypi.com) (mini linux computer) hosts a web-site running [NGINX](https://techworldthink.github.io/Tech-Guides/pages/nginx_pi.html) (an open source web server) where you can scroll through specific days and times throughout the year(s) and view pics and videos. 
+
+Allows you, among other things, to verify that packages were actually delivered and/or any suspicious activity.
   
+.  
 ![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/769a5804-15cf-4de5-9959-3abb299556ce)
 
 
@@ -19,7 +22,7 @@ The camera will copy all the files (image and video) of a day in a named folder 
 
 You need to mount [flashdrives](https://www.amazon.com/gp/product/B083ZLJ5MG/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) with sufficient capacity to hold all the files. Files for a whole year amount to around 200 Gbytes.
 
-The web application files are located at: /var/www/html. The main index.html file is powered by [angularjs](https://docs.angularjs.org/guide/introduction) technology.
+By default for NGINX, the web application files are located at: /var/www/html. The main index.html file is powered by [angularjs](https://docs.angularjs.org/guide/introduction) technology.
 
   
 Example file upload structure:  

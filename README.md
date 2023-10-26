@@ -3,7 +3,7 @@ Web page showing videos and pictures taken by the motion detecting [Amcrest ProH
 
 A [raspberrypi](https://www.raspberrypi.com) (mini linux computer) hosts a web-site running [NGINX](https://techworldthink.github.io/Tech-Guides/pages/nginx_pi.html) (an open source web server) where you can scroll through specific days and times throughout the year(s) and view pics and videos. 
 
-Allows you, among other things, to verify that packages were actually delivered and/or any suspicious activity.
+Allows you, among other things, to verify that packages were actually delivered and/or monitor any suspicious activity.
   
 .  
 ![image](https://github.com/nerillosa/amcrest_camera_web-view/assets/4867918/769a5804-15cf-4de5-9959-3abb299556ce)

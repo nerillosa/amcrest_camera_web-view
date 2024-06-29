@@ -49,6 +49,11 @@
        cursor: pointer;
        border: 2px solid blue;
      }
+     img.slides2 {
+       width: 80%;
+       cursor: pointer;
+       border: 2px solid blue;
+     }
      img.arrows{
        width: 20px;
        cursor: pointer;

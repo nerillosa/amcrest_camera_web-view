@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reolink files</title>
+    <title>Amcrest files</title>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta name="keywords" content="photos, videos, snapshots, motion detectors" />
-    <link rel="icon" type="image/png" href="images/reolink.png">
+    <link rel="icon" type="image/png" href="images/amcrest.png">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
     <link rel="stylesheet" type="text/css" href="css/amcrest.css">
 </head>
@@ -25,7 +25,7 @@
 				ng-src="/images/left_arrow.png" ng-if="selectedHour" ng-click="pullHours()"/>
 			<span>
 				Choose Hour:
-				<select ng-model="selectedHour" ng-options="hour for hour in hours" ng-change="getImages2()">
+				<select ng-model="selectedHour" ng-options="hour for hour in hours" ng-change="getImages()">
 					<option value="">-Select-</option>
 				</select>
 			</span>
@@ -34,7 +34,7 @@
 		</div>
 		<br>
 		<div>
-			<img class="slides2" ng-src="/files/{{day}}/{{Image}}" ng-click="ImageClick()" alt="&nbsp;no images"/>
+			<img class="slides" ng-src="/{{filesystem}}/{{day}}/{{selectedHour}}hour/jpg/{{Image}}" ng-click="ImageClick()" alt="&nbsp;no images"/>
 		</div>
 		<div class="scrollDiv">
 			<div>
@@ -59,7 +59,7 @@
 		<div ng-if="gridImages.length">Click on box for specific time</div>
 		<div ng-repeat="grid in gridImages" class="parentt">
 			<span ng-repeat="img in grid" ng-click="focusImage(img)" class="dina" ng-style="Image==img ? {'background-color':'blue'} : {'background-color':'#ADD8E6'}">
-				{{img.substring(16,18) + ':' + img.substring(18,20) + ':' + img.substring(20,22)}}
+				{{img.substring(0,8).replace('.',':').replace('.',':')}}
 			</span>    
 		</div>
 	</div>
@@ -67,7 +67,7 @@
 		<h3>Videos for Day/Hour chosen</h3>
 		<div ng-repeat="vid in Videos">
 			<div style="margin-bottom: 6px;">
-			<a href="#" ng-click="openVideo(vid)">{{vid.substring(16,18) + ':' + vid.substring(18,20) + ':' + vid.substring(20,22)}}</a>
+			<a href="#" ng-click="openVideo(vid)">{{vid | limitTo:17}}</a>
 			</div>
 		</div>
 		<br>
@@ -80,18 +80,35 @@
 <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
 <script>
     angular.module("myApp", []).controller('myController', printjStats).directive('valueChanged', dateChanged); 
-
+    
     function dateChanged($http){
-    	return {
-    		restrict: 'A',
-    		link: function(scope, element, attrs){
-    			element.on("change", function(evt){
-    				scope.day = element.val();
-    				scope.hours = [];
-    				scope.selectedHour = null;
-				scope.getImages()});
-    			}
-    	};
+        return {
+                restrict: 'A',
+                link: function(scope, element, attrs){
+                        element.on("change", function(evt){
+                                scope.day = element.val();
+                                if(scope.day.substring(0,4) == '2021'){
+                                   scope.filesystem = 'files2021';
+                                }else if(scope.day.substring(0,4) == '2022'){
+                                   scope.filesystem = 'files2022';
+                                }else if(scope.day.substring(0,4) == '2023'){
+                                   scope.filesystem = 'files2023';
+                                }else{
+                                   scope.filesystem = 'files2024';
+                                }
+                                scope.hours = [];
+                                scope.selectedHour = null;
+                                getHours(scope, $http);});
+                        }
+        };
+    }
+
+    function getHours(scope, http){
+    	http.get("getTimes.php?day=" + scope.day).then(function (response){
+    		scope.hours = response.data;
+		scope.selectedHour = scope.hours[scope.hours.length - 1];
+		scope.getImages();
+    	});
     }
 
     function printjStats($scope, $timeout, $interval, $http, $httpParamSerializer){
@@ -102,10 +119,21 @@
 	$scope.loading = true;
     	$scope.videosFlag = false;
 	$scope.myWindow;
+	let config = { headers : { 'Content-Type': 'application/x-www-form-urlencoded' }};
 
 	$timeout(function(){
+                document.getElementById('datepicker').value = '2024-06-16'; //last date that amcrest camera was functional
 		$scope.day = document.getElementById('datepicker').value;
-		$scope.getImages();
+                if($scope.day.substring(0,4) == '2021'){
+                   $scope.filesystem = 'files2021';
+                }else if($scope.day.substring(0,4) == '2022'){
+                   $scope.filesystem = 'files2022';
+                }else if($scope.day.substring(0,4) == '2023'){
+                   $scope.filesystem = 'files2023';
+                }else{
+                   $scope.filesystem = 'files2024';
+                }		
+		getHours($scope, $http);
 	});
 
 	$scope.incrementDate = function(){
@@ -132,14 +160,23 @@
         		month = '0' + month;
     		if (day.length < 2) 
         		day = '0' + day;
-		return [year, month, day].join('/');
+		return [year, month, day].join('-');
 	}
 	
 	function dateChg(){
 		$scope.day = document.getElementById('datepicker').value;
+		if($scope.day.substring(0,4) == '2021'){
+		   $scope.filesystem = 'files2021';
+		}else if($scope.day.substring(0,4) == '2022'){
+		   $scope.filesystem = 'files2022';
+		}else if($scope.day.substring(0,4) == '2023'){
+		   $scope.filesystem = 'files2023';
+		}else{
+		   $scope.filesystem = 'files2024';
+		}
 		$scope.hours = [];
 		$scope.selectedHour = null;
-		$scope.getImages();
+		getHours($scope, $http);
 	}
 
 	$scope.scrollPics = function(){
@@ -154,37 +191,15 @@
 	};
 
 	$scope.getImages = function(){
-		$http.get("getReoFiles.php?day=" + $scope.day).then(function (response){
-			$scope.response = response;
-			$scope.hours = response.data[0].jpegs.reduce(function(a,b){
-				if (a.indexOf(b.substring(0,2)) < 0 ) a.push(b.substring(0,2));
-					return a;
-			},[]);
-
-			$scope.selectedHour = $scope.hours[$scope.hours.length - 1];
-			$scope.getImages2();
-		});
-
-	};
-
-
-	$scope.getImages2 = function(){
-
-			$scope.Images = $scope.response.data[0].jpegs.filter(img => img.startsWith($scope.selectedHour)).reduce(function(a,b){
-				a.push(b.substring(6));
-				return a;
-			},[]);
-
-			$scope.Videos = $scope.response.data[1].mp4s.filter(img => img.startsWith($scope.selectedHour)).reduce(function(a,b){
-				a.push(b.substring(6));
-				return a;
-			},[]);
-
-                        $scope.loading = false;
-                        $scope.Image = $scope.Images[0];
-                        index = 0;
-                        numImages = $scope.Images.length;
-                        $scope.gridImages = [];
+		let payload = {hour: $scope.selectedHour+"hour", day: $scope.day};
+		$http.post("getImages.php",$httpParamSerializer(payload),config).then(function (response) {
+			$scope.loading = false;
+			$scope.Image = response.data[0].jpegs[0];
+			$scope.Images = response.data[0].jpegs;
+			$scope.Videos = response.data[1].mp4s;
+			index = 0;
+			numImages = response.data[0].jpegs.length;
+			$scope.gridImages = [];
 			var arr = new Array();
 			for(var i=0; i< $scope.Images.length; i++){
 				if(i && i % 3 == 0){
@@ -199,7 +214,8 @@
 					document.getElementById("rightArrow").focus();
 				},200);
 			}
-	}
+		});
+	};
 
 	$scope.pullHours = function(){
 		var indexx = $scope.hours.indexOf($scope.selectedHour);
@@ -208,7 +224,7 @@
 		}else{
 			$scope.selectedHour = $scope.hours[indexx - 1];
 		}
-		$scope.getImages2();
+		$scope.getImages();
 	};
 
 	$scope.pushHours = function(){
@@ -218,7 +234,7 @@
 		}else{
 			$scope.selectedHour = $scope.hours[indexx + 1];
 		}
-		$scope.getImages2();
+		$scope.getImages();
 	};
 
 	$scope.rightArrow = function($event){
@@ -277,11 +293,11 @@
 			$scope.myWindow = null;
 		}
 		$scope.myWindow = window.open("", "MsgWindow", "width=850,height=600");
- 		var link = "/files/" + $scope.day + "/" +  vid;
-
+ 		var link = "/" + $scope.filesystem + "/" + $scope.day + "/" + $scope.selectedHour + "hour/mp4/" + vid;
 		var videoUrl = '<video width="800" height="500" controls="controls"> <source src="';
 		videoUrl +=  link;
 		videoUrl += '" type="video/mp4" /></video>';
+		$scope.myWindow.document.write('<div style="text-align:center;">' + $scope.day + " <b>from</b> " + vid.substring(0,8).replace(/\./g, ":") + ' <b>to</b> ' +  vid.substring(9,17).replace(/\./g, ":") + '</div>');
 		$scope.myWindow.document.write(videoUrl);
 		$scope.myWindow.document.write('<div style="margin-top:5px;text-align:center;"><a href="' + link + '" download>Download Video</a></div>');
 	};
@@ -297,7 +313,7 @@
 					let month = date.getMonth() + 1;
 					if(month < 10) month = "0" + month;
 					let year = date.getFullYear();
-					return `${year}/${month}/${day}`;
+					return `${year}-${month}-${day}`;
 				}
 		});
 </script>

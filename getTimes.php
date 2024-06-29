@@ -15,8 +15,11 @@ if(substr($day, 0, 4) == '2021'){
 }else if(substr($day, 0, 4) == '2022'){
 	$execString = 'ls -l files2022/' . $day . ' | sed -En \'s/.*([0-2][0-9])hour$/\1/p\'';
 }
+else if(substr($day, 0, 4) == '2023'){
+	$execString = 'ls -l files2023/' . $day . ' | sed -En \'s/.*([0-2][0-9])hour$/\1/p\'';
+}
 else{
-	$execString = 'ls -l files_current/' . $day . ' | sed -En \'s/.*([0-2][0-9])hour$/\1/p\'';
+	$execString = 'ls -l files2024/' . $day . ' | sed -En \'s/.*([0-2][0-9])hour$/\1/p\'';
 
 }
 

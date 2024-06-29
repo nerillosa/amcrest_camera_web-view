@@ -6,8 +6,10 @@ if(substr($day, 0, 4) == '2021'){
         $execString = 'ls -l files2021/' . $day . '/' . $hour . '/jpg  | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
 } else if(substr($day, 0, 4) == '2022'){
         $execString = 'ls -l files2022/' . $day . '/' . $hour . '/jpg  | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
+} else if(substr($day, 0, 4) == '2023'){
+        $execString = 'ls -l files2023/' . $day . '/' . $hour . '/jpg  | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
 } else{
-        $execString = 'ls -l files_current/' . $day . '/' . $hour . '/jpg  | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
+        $execString = 'ls -l files2024/' . $day . '/' . $hour . '/jpg  | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
 }
 
 exec($execString, $output);
@@ -17,8 +19,10 @@ if(substr($day, 0, 4) == '2021'){
 	$execString = 'ls -l files2021/' . $day . '/' . $hour . '/mp4  | grep -v idx$ | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
 } else if(substr($day, 0, 4) == '2022'){
 	$execString = 'ls -l files2022/' . $day . '/' . $hour . '/mp4  | grep -v idx$ | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
+} else if(substr($day, 0, 4) == '2023'){
+	$execString = 'ls -l files2023/' . $day . '/' . $hour . '/mp4  | grep -v idx$ | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
 } else{
-	$execString = 'ls -l files_current/' . $day . '/' . $hour . '/mp4  | grep -v idx$ | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
+	$execString = 'ls -l files2024/' . $day . '/' . $hour . '/mp4  | grep -v idx$ | grep -v total | tr -s \' \' | cut -d\' \' -f9 2>&1';
 }
 
 exec($execString, $output2);
